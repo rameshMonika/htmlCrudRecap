@@ -18,11 +18,7 @@ var BabiesDB = {
         var conn = db.getConnection();
 
         conn.connect(function (err) {
-            if (err) {
-                console.log(err);
-                return callback(err.null);
-            }
-            else {
+            try {
                 console.log("Connected!");
 
                 var sql = 'SELECT * FROM babies_record.baby; ;';
@@ -37,8 +33,20 @@ var BabiesDB = {
                         return callback(null, result);
                     }
                 });
+
             }
+            catch (err) {
+                console.log(err);
+                return callback(err.null);
+
+            }
+
+
         });
+
+
+
+
     },
 
 
@@ -47,11 +55,9 @@ var BabiesDB = {
         var conn = db.getConnection();
 
         conn.connect(function (err) {
-            if (err) {
-                console.log(err);
-                return callback(err.null);
-            }
-            else {
+
+
+            try {
                 console.log("Connected!");
 
                 var sql =
@@ -64,19 +70,26 @@ var BabiesDB = {
                         console.log(err);
                         return callback(err.null);
                     } else {
-                       
-                       if(result[0]==undefined){
-                           err="undefined"
-                           return callback(null, err);
-                       }
-                       else{
-                           console.log(result)
-                           return callback(null, result);
-                       }
-                       
+
+                        if (result[0] == undefined) {
+                            err = "undefined"
+                            return callback(null, err);
+                        }
+                        else {
+                            console.log(result)
+                            return callback(null, result);
+                        }
+
                     }
                 });
+
             }
+            catch (err) {
+                console.log(err);
+                return callback(err.null);
+
+            }
+
         });
     },
 
@@ -87,44 +100,46 @@ var BabiesDB = {
         var conn = db.getConnection();
 
         conn.connect(function (err) {
-            if (err) {
-                console.log(err);
-                return callback(err.null);
-            }
-            else {
+
+
+            try {
                 console.log("Connected!");
 
                 var sql = `
-                DELETE 
-                FROM
-               baby
-                WHERE
-                id = ?;`
+    DELETE 
+    FROM
+   baby
+    WHERE
+    id = ?;`
                     ;
 
                 conn.query(sql, [id], function (err, result) {
 
                     conn.end();
-                    if (err) {
-                        console.log(err);
-                        return callback(err.null);
-                    } else {
-                        // any results
-                        if (result.length == 0) {
-                            // if there is no result, let's callback with
-                            //no error, and no results
-                            return callback(null, null);
-                        }
-                        else {
-                            // since there is a size to it, it must be that
-                            // there is only one record left
-                            // let's return  the only onr founf(result[0])
-                            return callback(null, result[0]);
-                        }
+                    
+
+                    if(result.affectedRows==0){
+                        err = "not found"
+                        return callback(null, err);
 
                     }
+                    else{
+                        console.log(result)
+                        return callback(null, result);
+
+                    }
+                      
+
+                    
                 });
+
             }
+            catch (err) {
+                console.log(err);
+                return callback(err.null);
+
+            }
+
         });
     },
 
@@ -132,13 +147,13 @@ var BabiesDB = {
     //  Assignment 2
     addBaby: function (name, height_six_month, height_seven_month, height_eight_month, height_nine_month, height_ten_month, callback) {
         // geta connection to the database
-    
+
         var conn = db.getConnection();
 
         conn.connect(
             function (err) {
 
-          
+
                 var sql = `INSERT INTO
     baby (
        name,
@@ -158,14 +173,14 @@ VALUES
 );
     `;
 
-    
+
                 conn.query(sql, [name, height_six_month, height_seven_month, height_eight_month, height_nine_month, height_ten_month], function (err, result) {
 
 
                     if (err) {
                         console.log("~~~~~~~~~~~~~~~~~errorcode~~~~~~~~~~~~");
                         console.log(err.code);
-                        
+
                         console.log("~~~~~~~~~~~~~~~~~~~~~~~~~")
                         return callback(null, result);
                         // return callback(null, result);
@@ -178,8 +193,8 @@ VALUES
                 });
 
 
-        });
-    
+            });
+
     },
 
 
@@ -222,10 +237,10 @@ VALUES
                         console.log(err);
                         return callback(null, err);
                     } else {
-                      
-                        if(result.affectedRows==0){
-                            err="not found"
-                            return callback(null,err);
+
+                        if (result.affectedRows == 0) {
+                            err = "not found"
+                            return callback(null, err);
                         }
                         return callback(null, result);
                     }
