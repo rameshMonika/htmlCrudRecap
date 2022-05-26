@@ -105,24 +105,23 @@ var BabiesDB = {
                 conn.query(sql, [id], function (err, result) {
 
                     conn.end();
-                    if (err) {
-                        console.log(err);
-                        return callback(err.null);
-                    } else {
+                    
                         // any results
-                        if (result.length == 0) {
-                            // if there is no result, let's callback with
-                            //no error, and no results
-                            return callback(null, null);
+                        if (result.affectedRows == 0) {
+                            err="Id not found"
+                          console.log(err)
+                            return callback(null, err);
                         }
                         else {
                             // since there is a size to it, it must be that
                             // there is only one record left
                             // let's return  the only onr founf(result[0])
-                            return callback(null, result[0]);
+                            console.log(result[0])
+                            
+                            return callback(null, result);
                         }
 
-                    }
+                    
                 });
             }
         });
