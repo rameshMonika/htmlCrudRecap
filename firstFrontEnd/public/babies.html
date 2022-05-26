@@ -365,9 +365,13 @@
 
             console.log(reqBody);
 
+            
+
 
 
             $.ajax({
+
+                
 
                 url: `http://localhost:8000/baby`,
                 type: 'POST',
@@ -395,17 +399,22 @@
                 error: function (xhr, textStatus, errorThrown) {
                     console.log('Error in Operation');
 
-                    console.log(xhr);
-                    console.log(textStatus);
-                    console.log(errorThrown);
+                    console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+
+                    console.log("have probelms adding")
+                    console.log(" XHR : "+xhr);
+                    console.log(" text status : "+textStatus);
+                    console.log(" error thrown : "+errorThrown);
 
                     console.log(xhr.responseText);
                     console.log(xhr.status);
 
-
+                    console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 
                 }
             });
+
+
 
 
             // window.location.reload()
