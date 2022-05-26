@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<!-- saved from url=(0099)https://esp.sp.edu.sg/bbcswebdav/pid-1799723-dt-content-rid-8546103_2/courses/ST0503/viewUsers.html -->
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Friendbook</title>
+    <link rel="stylesheet" href="./viewUser_files/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+
+<body data-new-gr-c-s-check-loaded="14.991.0" data-gr-ext-installed="">
+    <div class="container">
+    </div>
+    <script src="./viewUser_files/jquery-3.3.1.min.js.download"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="./viewUser_files/popper.min.js.download"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="./viewUser_files/bootstrap.min.js.download"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <script>
+
+        function createCard(cardInfo) {
+            console.log(cardInfo);
+
+            var card = `
+    <div class="card" style="margin-top: 2rem;">
+                    <div class="card-body">
+                        <p class="card-text">${cardInfo.username}</p>
+                    </div>
+                    <div class="card-footer text-muted">
+                        ${cardInfo.email}
+                    </div>
+                    <div class="card-footer text-muted">
+                        <a href="/viewUser.html?userid=${cardInfo.userid}"
+                            class="btn btn-primary">View</a>
+
+                    </div>
+                </div>`;
+            /*
+            href="viewUsers.html"
+            href="/viewUsers.html"
+
+            href          | Current loaction                       | Target location
+            -------------------------------------------------------------------------------
+            a.html        | http://abc.com/page1.html              | http://abc.com/a.html
+            /a.html       | http://abc.com/page1.html              | http://abc.com/a.html
+            a.html        | http://abc.com/sub/page1.html          | http://abc.com/sub/a.html
+           /a.html        | http://abc.com/sub/page1.html          | http://abc.com/a.html
+
+           login.html       http://abc.com/catalog/products.html         http://abc.com/catalog/login.html 
+           /login.html      http://abc.com/catalog/products.html         http://abc.com/login.html 
+
+           http://abc.com/games.html?id=132
+           http://abc.com/game?id=132
+            */
+            return card;
+        }
+
+
+        function loadAllUsers() {
+            $.ajax({
+                // headers: { 'authorization': 'Bearer ' + tmpToken },
+                url: 'http://localhost:8000/users/',
+                type: 'GET',
+                // data: JSON.stringify(data2),
+                contentType: "application/json; charset=utf-8",
+                // dataType: 'json',
+                success: function (data, textStatus, xhr) {
+                    console.log("-------response data------")
+                    console.log(data)
+
+                    for (var i = 0; i < 7; i++) {
+                        var user = data[i];
+                        // console.log("userid:"+user.userid);
+                        // console.log("username:"+user.username);
+                        // console.log("email:"+user.email);
+
+
+                        var cardInfo = {
+                            "userid": user.userid,
+                            "username": user.username,
+                            "email": user.email
+                        }
+
+                        console.log("---------Card INfo data pack------------")
+                        console.log(cardInfo);
+
+                        var newCard = createCard(cardInfo);
+
+                        $('#users').append(newCard);
+
+
+                    }
+
+
+
+
+                    // if (data != null && data.success) {
+
+
+                    //     $('#msg').html('Record updated successfully!');
+
+                    // } else {
+                    //     console.log("Error");
+                    // }
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log('Error in Operation');
+
+                    console.log(xhr);
+                    console.log(textStatus);
+                    console.log(errorThrown);
+
+                    console.log(xhr.responseText);
+                    console.log(xhr.status);
+
+                    // if (xhr.status == 401) {
+                    //     $('#msg').html("yo! Unauthorized!")
+                    // }
+                }
+            });
+
+        }
+
+        function loadUser(userid) {
+            $.ajax({
+
+                url: 'http://localhost:8000/users/' + userid,
+                type: 'GET',
+                // data: JSON.stringify(data2),
+                // contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                success: function (data, textStatus, xhr) {
+                    console.log("-------response data------")
+                    console.log(data)
+
+                    if (data.length == 0) {
+                        console.log("No user found in Search")
+                        $('#messages').html("No user found in Search")
+                        loadAllUsers();
+                        return;
+                    }
+
+                    var cardInfo = {
+                        "userid": data[0].userid,
+                        "username": data[0].username,
+                        "email": data[0].email
+                    }
+
+                    var cardHtml = createCard(cardInfo);
+
+                    $('#users').append(cardHtml)
+
+
+
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log('Error in Operation');
+
+                    console.log(xhr);
+                    console.log(textStatus);
+                    console.log(errorThrown);
+
+                    console.log(xhr.responseText);
+                    console.log(xhr.status);
+
+                    // if (xhr.status == 401) {
+                    //     $('#msg').html("yo! Unauthorized!")
+                    // }
+                }
+            });
+
+
+
+        }
+
+
+
+
+
+
+        $(document).ready(function () {
+            // check if we have a valid search query param
+            // if yes, load just that user
+            // else load all users
+
+            var queryParams = new URLSearchParams(window.location.search);
+            console.log("--------Query Params----------")
+            console.log("Query Param (source): " + window.location.search)
+            console.log("Query Param (extraction): " + queryParams)
+
+            if (queryParams.has("search_userid")) {
+                // if yes, load just that user
+                var userid = queryParams.get("search_userid")
+                console.log(true);
+                loadUser(userid);
+            }
+            else {
+                // else load all users
+
+                loadAllUsers();
+
+            }
+
+
+
+
+            //    register the search button click
+
+            $('#Search').click(function () {
+
+                console.log("search button is clicked")
+
+                // data extraction
+                var searchUserId = $('#userid').val();
+                console.log("Search UserID: " + searchUserId)
+
+                // data compilation
+                var redirectURL = "http://localhost:8001/viewUsers.html?search_userid=" + searchUserId;
+
+                // redirect to url with query parameters
+                window.location.assign(redirectURL)
+                console.log("Redirect URL: " + redirectURL)
+
+                // disable the normal behaviour of a form submit
+                return false
+
+            })
+
+
+
+
+
+        });  
+    </script>
+
+
+
+    <div class="container">
+        <nav class="nav">
+            <a class="nav-link" href="https://esp.sp.edu.sg/profile.html">Profile</a>
+            <a class="nav-link" href="https://esp.sp.edu.sg/viewUsers.html">All Users</a>
+        </nav>
+
+        <div style="margin-top: 2rem;">
+            <h1>Home</h1>
+            
+            <div id="messages">
+
+            </div>
+
+            <form id="search-user-form" style="margin-top: 2rem;">
+                <div class="form-group">
+                    <textarea class="form-control" id="userid" rows="3" placeholder="Search what?"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" id="Search">Search User by ID</button>
+            </form>
+
+            <div id="users">
+
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>SP Games</title>
+    <link rel="stylesheet" href="./viewUser_files/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+
+<body data-new-gr-c-s-check-loaded="14.991.0" data-gr-ext-installed="">
+    <div class="container">
+    </div>
+
+
+    <script src="./viewUser_files/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+    <script src="./viewUser_files/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="./viewUser_files/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <script>
+
+        function addUser(username, email, type, password, profilePic) {
+
+
+            const requestBody = {
+                username: username,
+                email: email,
+                type: type,
+                password: password,
+                profilePic: profilePic
+
+            }
+            console.log("--------request body------")
+            console.log(requestBody)
+
+            const reqBody = JSON.stringify(requestBody)
+
+
+
+            const token = localStorage.getItem("token")
+
+            var header = { "Authorization": "Bearer " + token }
+
+            console.log("---------- ajax ............");
+
+            console.log(reqBody);
+            // console.log(header);
+
+
+
+            $.ajax({
+
+                url: `http://localhost:8000/users/`,
+                type: 'POST',
+                data: reqBody,
+
+                contentType: "application/json; charset=utf-8",
+
+                headers: header,
+                dataType: 'json',
+
+                success: function (data, textStatus, xhr) {
+
+                    console.log("SUCCESS: " + data);
+
+                    const post = data;
+                    console.log("============")
+                    console.log(post)
+
+
+
+
+
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log('Error in Operation');
+
+                    console.log(xhr);
+                    console.log(textStatus);
+                    console.log(errorThrown);
+
+                    console.log(xhr.responseText);
+                    console.log(xhr.status);
+
+                    // if (xhr.status == 401) {
+                    //     $('#categoryMsg').html("You are not an admin you cannot post categories!")
+                    // }
+
+                    // if (xhr.status == 422) {
+                    //     $('#categoryMsg').html("The category name provided already exist")
+                    // }
+
+
+                }
+            });
+
+
+
+
+
+
+        }
+
+
+
+
+
+
+
+
+        $(document).ready(function () {
+
+
+
+
+
+
+            $('#add').click(function () {
+
+                console.log("add user is clicked")
+
+
+
+                var username = $('#username').val();
+                var email = $('#email').val();
+                var type = $('#type').val();
+                var password = $('#password').val();
+                var profilePic = $('#Profilepic').val();
+
+                console.log(username)
+                console.log(email)
+                console.log(type)
+                console.log(password)
+                console.log(profilePic)
+
+                addUser(username, email, type, password, profilePic)
+
+
+
+
+
+
+                // var redirectURL = `http://localhost:8001/viewGames.html?search_gameplatform=${searchGamePlatform}&search_gameprice=${searchGamePrice}&search_gametitle=${searchGameTitle}`;
+
+
+                // window.location.assign(redirectURL)
+                // console.log("Redirect URL: " + redirectURL)
+
+                return false
+
+            })
+
+
+
+
+
+        });  
+    </script>
+
+
+
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="#">SpGames</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <a class="nav-item nav-link " href="http://localhost:8001/login.html">Home </a>
+                    <a class="nav-item nav-link active" href="http://localhost:8001/viewGames.html">Games<span
+                            class="sr-only">(current)</span></a>
+                    <a class="nav-item nav-link" href="http://localhost:8001/about.html">About</a>
+
+                </div>
+            </div>
+        </nav>
+
+        <div style="margin-top: 2rem;">
+
+
+            <div id="messages">
+
+            </div>
+
+            <form id="search-user-form" style="margin-top: 2rem;">
+                <h3>Username</h3>
+                <div class="form-group">
+                    <textarea class="form-control" id="username" rows="2" placeholder="Username"></textarea>
+                </div>
+                <h3>Email</h3>
+                <div class="form-group">
+                    <textarea class="form-control" id="email" rows="3" placeholder="Email"></textarea>
+                </div>
+                <h3>Type</h3>
+                <div class="form-group">
+                    <textarea class="form-control" id="type" rows="3" placeholder="Type"></textarea>
+                </div>
+                <h3>Password</h3>
+                <div class="form-group">
+                    <textarea class="form-control" id="password" rows="3" placeholder="Password"></textarea>
+                </div>
+                <h3>Profile pic url</h3>
+                <div class="form-group">
+                    <textarea class="form-control" id="Profilepic" rows="3"
+                        placeholder="Profile picture url"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" id="add">Add User</button>
+            </form>
+
+
+
+
+        </div>
+    </div>
+
+
+
+
+
+</body>
+
+</html>

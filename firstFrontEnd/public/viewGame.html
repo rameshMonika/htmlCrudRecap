@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<!-- saved from url=(0099)https://esp.sp.edu.sg/bbcswebdav/pid-1799723-dt-content-rid-8546103_2/courses/ST0503/viewUsers.html -->
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>SP Games</title>
+    <link rel="stylesheet" href="./viewUser_files/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+
+<body data-new-gr-c-s-check-loaded="14.991.0" data-gr-ext-installed="">
+    <div class="container">
+    </div>
+    <script src="./viewUser_files/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="./viewUser_files/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="./viewUser_files/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <script>
+
+
+        function loadAllUser() {
+            // data extraction main step 1/3
+            var queryParams = new URLSearchParams(window.location.search);
+            console.log("--------Query Params----------")
+            console.log("Query Param (source): " + window.location.search)
+            console.log("Query Param (extraction): " + queryParams)
+
+            if (!queryParams.has("gameid")) {
+
+                
+                console.log("Query params (gameid) is missing")
+                // and you will show these erorrs. 
+                $('#messages').html("Invalid Query Params.Page is unable to load")
+            }
+            else {
+
+
+                var gameid = queryParams.get("gameid")
+                console.log("Query params (gameid):" + queryParams.get("gameid"))
+
+
+               
+                $.ajax({
+
+                    url: 'http://localhost:8000/games/' + gameid,
+                    type: 'GET',
+                   
+                    dataType: 'json',
+                    success: function (data, textStatus, xhr) {
+                        console.log("-------response data------")
+                        console.log(data)
+
+                        console.log(data.length)
+
+                       
+                        $('#title').html(data[0].title);
+                        $('#description').html(data[0].description);
+                        $('#price').html(data[0].price);
+
+
+
+
+
+
+
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        console.log('Error in Operation');
+
+                        console.log(xhr);
+                        console.log(textStatus);
+                        console.log(errorThrown);
+
+                        console.log(xhr.responseText);
+                        console.log(xhr.status);
+
+                    }
+                });
+
+
+
+
+                console.log("-----------------------game-----------");
+                console.log("gameid: " + gameid);
+
+                $.ajax({
+
+                    url: 'http://localhost:8000/game/' + gameid + '/review',
+                    type: 'GET',
+                
+                    dataType: 'json',
+                    success: function (data, textStatus, xhr) {
+                        console.log("-------response data All reviews------")
+                        console.log(data)
+
+                        console.log(data[0].content)
+
+                        
+
+                        const posts = data;
+                        posts.forEach((post) => {
+                            const postHtml = `
+                    <div class="card" style="margin-top: 2rem;">
+                        <div class="card-body">
+                            <p class="card-text">${post.content}</p>
+                        </div>
+                        <div class="card-footer text-muted">
+                            ${post.created_at}
+                        </div>
+                    </div>
+                    `;
+
+                            $("#posts").append(postHtml);
+                        });
+
+
+
+
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        console.log('Error in Operation');
+
+                        console.log(xhr);
+                        console.log(textStatus);
+                        console.log(errorThrown);
+
+                        console.log(xhr.responseText);
+                        console.log(xhr.status);
+
+                    }
+                });
+
+
+
+            }
+
+        
+
+        }
+
+
+
+        function loadAllReview() {
+            // data extraction main step 1/3
+            var queryParams = new URLSearchParams(window.location.search);
+            console.log("--------Query Params----------")
+            console.log("Query Param (source): " + window.location.search)
+            console.log("Query Param (extraction): " + queryParams)
+
+            if (!queryParams.has("gameid")) {
+
+                
+                console.log("Query params (gameid) is missing")
+                // and you will show these erorrs. 
+                $('#messages').html("Invalid Query Params.Page is unable to load")
+            }
+            else {
+
+
+                var gameid = queryParams.get("gameid")
+                console.log("Query params (gameid):" + queryParams.get("gameid"))
+
+
+               
+                $.ajax({
+
+                    url: 'http://localhost:8000/game/' + gameid+'/review',
+                    type: 'GET',
+                   
+                    dataType: 'json',
+                    success: function (data, textStatus, xhr) {
+                        console.log("-------response data   review MAINNN------")
+                        console.log(data)
+
+                        if(data.length==0){
+                            
+                        $('#avgRating').html("Rating has not been given yet.Be the first one to post rating!");
+
+                       
+
+                        }
+                        else{
+
+                            var sum=0;
+                        var avg;
+
+                        
+                        for(var i=0;i<data.length;i++){
+                            console.log(data[i].rating)
+                            sum=sum+data[i].rating
+                        }
+
+                        console.log(sum)
+
+                        avg=sum/data.length
+
+                        console.log(avg)
+
+                        $('#avgRating').html("Average rating of "+avg+" from "+data.length+" comment(s)");
+
+                       
+
+                        }
+
+                   
+
+
+
+
+
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        console.log('Error in Operation');
+
+                        console.log(xhr);
+                        console.log(textStatus);
+                        console.log(errorThrown);
+
+                        console.log(xhr.responseText);
+                        console.log(xhr.status);
+
+                    }
+                });
+
+
+
+
+                console.log("-----------------------game-----------");
+                console.log("gameid: " + gameid);
+
+                $.ajax({
+
+                    url: 'http://localhost:8000/game/' + gameid + '/review',
+                    type: 'GET',
+                
+                    dataType: 'json',
+                    success: function (data, textStatus, xhr) {
+                        console.log("-------response data All reviews------")
+                        console.log(data)
+
+                        console.log(data[0].content)
+
+                        
+
+                        const posts = data;
+                        posts.forEach((post) => {
+                            const postHtml = `
+                    <div class="card" style="margin-top: 2rem;">
+                        <div class="card-body">
+                            <p class="card-text">${post.content}</p>
+                        </div>
+                        <div class="card-footer text-muted">
+                            ${post.created_at}
+                        </div>
+                    </div>
+                    `;
+
+                            $("#posts").append(postHtml);
+                        });
+
+
+
+
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        console.log('Error in Operation');
+
+                        console.log(xhr);
+                        console.log(textStatus);
+                        console.log(errorThrown);
+
+                        console.log(xhr.responseText);
+                        console.log(xhr.status);
+
+                    }
+                });
+
+
+
+            }
+
+        
+
+        }
+
+
+
+
+
+        function addReview(rating, content) {
+            var queryParams = new URLSearchParams(window.location.search);
+            var gameid = queryParams.get("gameid");
+
+            console.log("-----game id.. reiview...");
+            console.log(gameid);
+
+            try {
+                var userData = localStorage.getItem("userInfo")
+                var userJsonData = JSON.parse(userData)
+                var userid = userJsonData[0].userid;
+                console.log(userid);
+            }
+            catch (err) {
+                console.log(err)
+                var userid = "x"
+            }
+
+            if(rating==""){
+                rating=0
+            }
+
+            const requestBody = {
+                content: content,
+                rating: rating
+            }
+
+            const reqBody=JSON.stringify(requestBody)
+
+            const token = localStorage.getItem("token")
+
+            var header = { "Authorization": "Bearer " + token }
+
+            console.log("---------- ajax ............");
+            console.log("userid: " + userid);
+            console.log("gameid:" + gameid);
+            console.log(reqBody);
+            console.log(header);
+
+       
+            
+            $.ajax({
+            
+                url: `http://localhost:8000/user/${userid}/game/${gameid}/review/`,
+                type: 'POST',
+                data: reqBody,
+           
+                contentType: "application/json; charset=utf-8",
+            
+                headers: header,
+                dataType: 'json',
+             
+                success: function (data, textStatus, xhr) {
+                 
+                    console.log("SUCCESS: " + data);
+
+                    const post = data;
+                    console.log("============")
+                    console.log(post)
+                            const postHtml = `
+                    <div class="card" style="margin-top: 2rem;">
+                        <div class="card-body">
+                            <p class="card-text">${data.content}</p>
+                        </div>
+                        <div class="card-footer text-muted">
+                            ${data.created_at}
+                        </div>
+                    </div>
+                    `;
+                            $("#posts").prepend(postHtml);
+
+
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log('Error in Operation');
+
+                    console.log(xhr);
+                    console.log(textStatus);
+                    console.log(errorThrown);
+
+                    console.log(xhr.responseText);
+                    console.log(xhr.status);
+
+                    if (xhr.status == 403) {
+                        $('#reviewMsg').html("Please login to post a review!")
+                    }
+
+                    if (xhr.status == 401) {
+                        $('#reviewMsg').html("You an admin cannot post review!")
+                    }
+                }
+            });
+
+
+
+
+
+
+        }
+
+        
+
+        $(document).ready(function () {
+             
+            loadAllUser();
+            loadAllReview();
+
+            $('#addPost').click(function () {
+
+                var content=$('#content').val()
+                var rating=$('#rating').val()
+
+                console.log("----------Reviewww--------")
+                console.log(content)
+                console.log(rating)
+
+                addReview(rating,content);
+
+                // prevents page from reloading
+                return false;
+
+
+            })
+
+
+
+            
+
+        });
+
+
+
+    </script>
+
+
+
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="#">SpGames</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+              <div class="navbar-nav">
+                <a class="nav-item nav-link " href="http://localhost:8001/login.html">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link" href="http://localhost:8001/viewGames.html">Games</a>
+                <a class="nav-item nav-link" href="#">About</a>
+             
+              </div>
+            </div>
+          </nav>
+     
+
+        <div style="margin-top: 2rem;">
+          
+          
+            <div id="messages">
+
+
+            </div>
+
+
+            <div id="detalis">
+                
+                <h4>Title</h4>
+                <div id="title">
+
+                </div>
+                <h4>Description</h4>
+                <div id="description">
+
+                </div>
+                <h4>Price</h4>
+                <div id="price">
+
+                </div>
+
+                <h4>Average Rating</h4>
+                <div id="avgRating">
+
+                </div>
+                
+             
+
+
+                <div id="reviewMsg" class="alert alert-info ">
+
+                </div>
+
+                <form id="create-post-form" style="margin-top: 2rem;">
+                    <div class="form-group">
+                        <textarea class="form-control" id="content" rows="3"
+                            placeholder="content"></textarea>
+
+                        <textarea class="form-control" id="rating" rows="3"
+                            placeholder="rating"></textarea>
+                    </div>
+                    <button type="submit" id="addPost" class="btn btn-primary">Create Post</button>
+                </form>
+
+
+
+                <div id="posts">
+                    <div class="card" style="margin-top: 2rem;">
+                     
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+</body>
+
+</html>

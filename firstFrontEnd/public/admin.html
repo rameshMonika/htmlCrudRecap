@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<!-- saved from url=(0099)https://esp.sp.edu.sg/bbcswebdav/pid-1799723-dt-content-rid-8546103_2/courses/ST0503/viewUsers.html -->
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>SP Games</title>
+    <link rel="stylesheet" href="./viewUser_files/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+
+<body data-new-gr-c-s-check-loaded="14.991.0" data-gr-ext-installed="">
+    <div class="container">
+    </div>
+
+
+    <script src="./viewUser_files/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+    <script src="./viewUser_files/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="./viewUser_files/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <script>
+
+
+
+        function addCategory(catName) {
+
+
+            const requestBody = {
+                catName: catName
+            }
+
+            const reqBody = JSON.stringify(requestBody)
+
+
+
+            const token = localStorage.getItem("token")
+
+            var header = { "Authorization": "Bearer " + token }
+
+            console.log("---------- ajax ............");
+
+            console.log(reqBody);
+            console.log(header);
+
+
+
+            $.ajax({
+
+                url: `http://localhost:8000/category`,
+                type: 'POST',
+                data: reqBody,
+
+                contentType: "application/json; charset=utf-8",
+
+                headers: header,
+                dataType: 'json',
+
+                success: function (data, textStatus, xhr) {
+
+                    console.log("SUCCESS: " + data);
+
+                    const post = data;
+                    console.log("============")
+                    console.log(post)
+
+
+
+
+
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log('Error in Operation');
+
+                    console.log(xhr);
+                    console.log(textStatus);
+                    console.log(errorThrown);
+
+                    console.log(xhr.responseText);
+                    console.log(xhr.status);
+
+                    if (xhr.status == 401) {
+                        $('#categoryMsg').html("Youare not an admin you cannot post categories!")
+                    }
+
+                    if (xhr.status == 422) {
+                        $('#categoryMsg').html("The category name provided already exist")
+                    }
+
+
+                }
+            });
+
+
+
+
+
+
+        }
+
+
+
+
+        function allCategory() {
+
+
+
+
+
+            $.ajax({
+
+                url: `http://localhost:8000/api/category`,
+                type: 'GET',
+                dataType: 'json',
+
+                success: function (data, textStatus, xhr) {
+
+                    console.log("SUCCESS: " + data);
+
+                    const post = data;
+                    console.log("============")
+                    console.log(post)
+
+                    console.log(post.length)
+
+                    for (var i = 0; i < post.length; i++) {
+                        var cat = post[i]
+                        console.log(cat.categoryid)
+                        console.log(cat.catname)
+                        $('#category').append('<option value="' + cat.categoryid + '">' + cat.catname + '</option>')
+
+                    }
+
+
+
+
+
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log('Error in Operation');
+
+                    console.log(xhr);
+                    console.log(textStatus);
+                    console.log(errorThrown);
+
+                    console.log(xhr.responseText);
+                    console.log(xhr.status);
+
+
+
+                }
+            });
+
+
+
+
+
+
+        }
+
+
+
+
+        function addGame(title,description,price,platform,categoryid,year) {
+
+
+            const requestBody = {
+                title:title,
+                description:description,
+                price:price,
+                platform:platform,
+                categoryid:categoryid,
+                year:year
+            }
+            console.log("--------request body------")
+            console.log(requestBody)
+
+            const reqBody = JSON.stringify(requestBody)
+
+
+
+            const token = localStorage.getItem("token")
+
+            var header = { "Authorization": "Bearer " + token }
+
+            console.log("---------- ajax ............");
+
+            console.log(reqBody);
+            console.log(header);
+
+
+
+            $.ajax({
+
+                url: `http://localhost:8000/game`,
+                type: 'POST',
+                data: reqBody,
+
+                contentType: "application/json; charset=utf-8",
+
+                headers: header,
+                dataType: 'json',
+
+                success: function (data, textStatus, xhr) {
+
+                    console.log("SUCCESS: " + data);
+
+                    const post = data;
+                    console.log("============")
+                    console.log(post)
+
+
+
+
+
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log('Error in Operation');
+
+                    console.log(xhr);
+                    console.log(textStatus);
+                    console.log(errorThrown);
+
+                    console.log(xhr.responseText);
+                    console.log(xhr.status);
+
+                    if (xhr.status == 401) {
+                        $('#categoryMsg').html("You are not an admin you cannot post categories!")
+                    }
+
+                    if (xhr.status == 422) {
+                        $('#categoryMsg').html("The category name provided already exist")
+                    }
+
+
+                }
+            });
+
+
+
+
+
+
+        }
+
+
+
+
+
+
+
+
+        $(document).ready(function () {
+
+            allCategory()
+
+
+            $('#addCategory').click(function () {
+
+                console.log("add category button clicked")
+
+                var catName = $('#catName').val()
+
+                console.log(catName)
+                addCategory(catName)
+
+                // var content = $('#content').val()
+                // var rating = $('#rating').val()
+
+                // console.log("----------Reviewww--------")
+                // console.log(content)
+                // console.log(rating)
+
+                // addReview(rating, content);
+
+                // prevents page from reloading
+                return false;
+
+
+            })
+
+
+
+
+            $('#addGame').click(function () {
+
+                console.log("add game button clicked")
+
+                var title = $('#title').val()
+                var description = $('#des').val()
+                var platform = $('#plat').val()
+                var year = $('#year').val()
+                var price=$('#price').val()
+                var categoryid=$('#category').val()
+
+                console.log(title)
+                console.log(description)
+                console.log(platform)
+                console.log(year)
+                console.log(price)
+                console.log(categoryid)
+
+                addGame(title,description,price,platform,categoryid,year)
+
+
+                return false;
+
+
+            })
+
+
+
+
+
+
+        });
+
+
+
+
+
+
+
+
+
+
+    </script>
+
+
+
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="#">SpGames</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <a class="nav-item nav-link " href="http://localhost:8001/login.html">Home </a>
+                    <a class="nav-item nav-link " href="http://localhost:8001/viewGames.html">Games<span
+                            class="sr-only">(current)</span></a>
+                    <a class="nav-item nav-link " href="http://localhost:8001/viewGames.html">Profile<span
+                            class="sr-only">(current)</span></a>
+                    <a class="nav-item nav-link" href="http://localhost:8001/about.html">About</a>
+    
+                </div>
+            </div>
+        </nav>
+
+        <div style="margin-top: 2rem;">
+           
+
+            <div id="messages">
+
+            </div>
+
+            <h2>Add Game</h2>
+            <form id="search-user-form" style="margin-top: 2rem;">
+                <div class="form-group">
+                    <h3>Title</h3>
+                    <textarea class="form-control" id="title" rows="2" placeholder="Title"></textarea>
+                    <h3>Description</h3>
+                    <textarea class="form-control" id="des" rows="2" placeholder="Description"></textarea>
+                    <h3>Price</h3>
+                    <textarea class="form-control" id="price" rows="2" placeholder="Price"></textarea>
+                    <h3>Platform</h3>
+                    <textarea class="form-control" id="plat" rows="2" placeholder="Platform"></textarea>
+                    <h3>Year</h3>
+                    <textarea class="form-control" id="year" rows="2" placeholder="Year"></textarea>
+
+                    <h3>Category</h3>
+                    <div>
+                        <select id="category">
+                            <option>Game Category</option>
+                        </select>
+                    </div>
+
+                </div>
+                <button type="submit" class="btn btn-primary" id="addGame">Add Game</button>
+
+            </form>
+
+
+            <h2>Add New Category</h2>
+            <form id="search-user-form" style="margin-top: 2rem;">
+                <div class="form-group">
+                    <textarea class="form-control" id="catName" rows="2" placeholder="New Category"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" id="addCategory">Add category</button>
+
+            </form>
+
+
+
+            <div id="categoryMsg">
+
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+</body>
+
+</html>
