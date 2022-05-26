@@ -64,7 +64,16 @@ var BabiesDB = {
                         console.log(err);
                         return callback(err.null);
                     } else {
-                        return callback(null, result);
+                       
+                       if(result[0]==undefined){
+                           err="undefined"
+                           return callback(null, err);
+                       }
+                       else{
+                           console.log(result)
+                           return callback(null, result);
+                       }
+                       
                     }
                 });
             }
@@ -154,9 +163,11 @@ VALUES
 
 
                     if (err) {
-
+                        console.log("~~~~~~~~~~~~~~~~~errorcode~~~~~~~~~~~~");
                         console.log(err.code);
-                        return callback(err);
+                        
+                        console.log("~~~~~~~~~~~~~~~~~~~~~~~~~")
+                        return callback(null, result);
                         // return callback(null, result);
                     } else {
                         return callback(null, result);
@@ -207,9 +218,15 @@ VALUES
 
                     conn.end();
                     if (err) {
+                        console.log("+++++++++++++++")
                         console.log(err);
-                        return callback(err.null);
+                        return callback(null, err);
                     } else {
+                      
+                        if(result.affectedRows==0){
+                            err="not found"
+                            return callback(null,err);
+                        }
                         return callback(null, result);
                     }
                 });
