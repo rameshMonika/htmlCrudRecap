@@ -116,21 +116,21 @@ var BabiesDB = {
                 conn.query(sql, [id], function (err, result) {
 
                     conn.end();
-                    
 
-                    if(result.affectedRows==0){
+
+                    if (result.affectedRows == 0) {
                         err = "not found"
                         return callback(null, err);
 
                     }
-                    else{
+                    else {
                         console.log(result)
                         return callback(null, result);
 
                     }
-                      
 
-                    
+
+
                 });
 
             }
@@ -154,46 +154,63 @@ var BabiesDB = {
             function (err) {
 
 
+
                 var sql = `INSERT INTO
-    baby (
-       name,
-       height_six_month,
-       height_seven_month, 
-       height_eight_month, 
-       height_nine_month,
-       height_ten_month)
-VALUES
-(
-?,
-?,
-?,
-?,
-?,
-?
-);
-    `;
+        baby (
+           name,
+           height_six_month,
+           height_seven_month, 
+           height_eight_month, 
+           height_nine_month,
+           height_ten_month)
+    VALUES
+    (
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?
+    );
+        `;
+
+                try {
+                    conn.query(sql, [name, height_six_month, height_seven_month, height_eight_month, height_nine_month, height_ten_month], function (err, result) {
 
 
-                conn.query(sql, [name, height_six_month, height_seven_month, height_eight_month, height_nine_month, height_ten_month], function (err, result) {
+                        if (err) {
+                            err = "Invalid Input "
+                            return callback(null, err);
+
+                        }
+                        else {
+                            return callback(null, result);
+
+                        }
 
 
-                    if (err) {
-                        console.log("~~~~~~~~~~~~~~~~~errorcode~~~~~~~~~~~~");
-                        console.log(err.code);
 
-                        console.log("~~~~~~~~~~~~~~~~~~~~~~~~~")
-                        return callback(null, result);
+
+                        // conn.end();
                         // return callback(null, result);
-                    } else {
-                        return callback(null, result);
+                    });
 
-                    }
-                    // conn.end();
-                    // return callback(null, result);
-                });
+                }
+                catch (err) {
+                    console.log("~~~~~~~~~~~~~~~~~errorcode~~~~~~~~~~~~");
+                    console.log(err.code);
 
+
+                    console.log("~~~~~~~~~~~~~~~~~~~~~~~~~")
+                    return callback(null, err);
+
+                }
 
             });
+
+
+
+
 
     },
 
@@ -205,13 +222,11 @@ VALUES
         var conn = db.getConnection();
 
         conn.connect(function (err) {
-            if (err) {
-                console.log(err);
-                return callback(err.null);
-            }
-            else {
-                console.log("Connected!");
 
+
+
+            console.log("Connected!");
+            try {
                 var sql = `
                 UPDATE 
                 baby
@@ -228,24 +243,41 @@ VALUES
                 
 
                 `;
+            
 
                 conn.query(sql, [name, height_six_month, height_seven_month, height_eight_month, height_nine_month, height_ten_month, id], function (err, result) {
 
-                    conn.end();
-                    if (err) {
-                        console.log("+++++++++++++++")
-                        console.log(err);
-                        return callback(null, err);
-                    } else {
 
-                        if (result.affectedRows == 0) {
-                            err = "not found"
-                            return callback(null, err);
-                        }
+                    if (err) {
+
+                        console.log(err);
+                        err = "Invalid Input"
+                        return callback(null, err);
+                    }
+                    else if (result.affectedRows == 0) {
+                        err = "not found"
+                        return callback(null, err);
+                    }
+                    else {
+
+                        result = "hi :" + result
+
                         return callback(null, result);
                     }
+                    conn.end();
                 });
+
             }
+            catch (err) {
+                err = "other error"
+                console.log(err);
+                return callback(null, err);
+
+            }
+
+
+
+
         });
     }
 

@@ -145,9 +145,14 @@ $('#confirmationMsg').html(confirmToast(msg)).fadeOut(2500);
                         console.log("error")
                         errMsg = "Please ensure that your values are accurate"
                     }
-                    else if(xhr.status == 201){
-                        errMsg = "The id doesn't exist "
+                    else if(xhr.status==400){
+                        errMsg = "Invalid input "+xhr.status
+
                     }
+                    else if(xhr.status == 201){
+                        errMsg = "The id doesn't exist "+xhr.status
+                    }
+                   
                     else {
 
                         console.log("----------------------------")
