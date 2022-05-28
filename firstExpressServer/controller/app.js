@@ -84,19 +84,22 @@ app.use(cors());
 
 // get babies
 
-app.get('/babies', printDebugInfo, function (req, res) {
+app.get('/babies', printDebugInfo, async (req, res) => {
 
-    babies.getBabies(function (err, result) {
-        if (!err) {
+   
+        babies.getBabies(function (err, result) {
+            if (!err) {
             console.log("==================================")
             console.log("get babies work")
             console.log("==================================")
-            res.send(result);
-        }
-        else {
-            res.status(500).send("Some error");
-        }
-    });
+            res.status(200).send(result);
+            }
+            else {
+                res.status(500).send("Some error");
+            }
+        });
+
+  
 
 });
 
@@ -104,20 +107,44 @@ app.get('/babies', printDebugInfo, function (req, res) {
 
 // get a baby
 
-app.get('/babies/:id', printDebugInfo, function (req, res) {
+app.get('/babies/:id', printDebugInfo, async (req, res) => {
     var babyid = req.params.id;
 
-    babies.getBaby(babyid, function (err, result) {
-        if (!err) {
-            res.send(result);
-        }
-        else {
-            output = {
-                "Error": "Internal sever issues"
-            };
-            res.status(500).send(output);
-        }
-    });
+    // try {
+        babies.getBaby(babyid, function (err, result) {
+
+            if(!err){
+                if (result.length == 0) {
+                    output = {
+                        "Error": "Id not found"
+                    };
+                    res.status(404).send(output);
+    
+                }
+                else {
+                    res.status(200).send(result);
+    
+                }
+
+
+            }
+            else{
+                    output = {
+            "Error": "Internal sever issues"
+        };
+        res.status(500).send(output);
+
+            }
+
+        
+
+
+
+        });
+
+   
+
+
 
 });
 
@@ -126,9 +153,24 @@ app.get('/babies/:id', printDebugInfo, function (req, res) {
 app.delete('/babies/:id', printDebugInfo, function (req, res) {
     var babyid = req.params.id;
 
+
     babies.deleteBaby(babyid, function (err, result) {
+
         if (!err) {
-            res.send(result);
+
+            if (result.affectedRows == 0) {
+
+                res.status(404).send("Item cannot be deleted");
+                
+
+            }
+            else {
+                res.status(200).send(result);
+
+            }
+
+
+
         }
         else {
             output = {
@@ -136,7 +178,14 @@ app.delete('/babies/:id', printDebugInfo, function (req, res) {
             };
             res.status(500).send(output);
         }
+
+
+
     });
+
+
+
+
 
 });
 
@@ -150,30 +199,41 @@ app.post('/baby', printDebugInfo, function (req, res) {
     var height_eight_month = req.body.height_eight_month;  // to extract data
     var height_nine_month = req.body.height_nine_month;
     var height_ten_month = req.body.height_ten_month;
-    
-   console.log("Name to be added : "+name)
-    babies.addBaby(name,height_six_month,height_seven_month,height_eight_month,height_nine_month,height_ten_month, function (err, result) {
-        // if there is no error the userid is shown in postman
+
+    console.log("Name to be added : " + name)
+
+
+    babies.addBaby(name, height_six_month, height_seven_month, height_eight_month, height_nine_month, height_ten_month, function (err, result) {
+
         if (!err) {
-            var output = {
-                "babyid": result.insertId
+            res.status(201).send(result)
+        }
+        else {
+
+            if (err.code == "ER_TRUNCATED_WRONG_VALUE_FOR_FIELD") {
+                res.status(406).send("Inappropriate value")
+
             }
 
-            console.log("result comd" + output.babyid)
+            else if (err.code == "ER_BAD_NULL_ERROR") {
+                res.status(400).send("Null value not allowed")
+
+            }
+            else {
+                res.status(500).send("Internal Server Error")
+
+            }
+
+        }
 
 
-            res.status(201).send(result);
-        }
-        // else shows internal error
-        else {
-            output = {
-                "Error": "Internal sever issues"
-            };
-            res.status(500).send(output);
-        }
     });
 
-});
+}
+
+
+
+);
 
 
 
@@ -186,10 +246,12 @@ app.put('/baby/:id', printDebugInfo, function (req, res) {
     var height_eight_month = req.body.height_eight_month;  // to extract data
     var height_nine_month = req.body.height_nine_month;
     var height_ten_month = req.body.height_ten_month;
-    
-   console.log("Name to be added : "+name)
-    babies.updateBaby(name,height_six_month,height_seven_month,height_eight_month,height_nine_month,height_ten_month,babyid,function (err, result) {
-        // if there is no error the userid is shown in postman
+
+    console.log("Name to be added : " + name)
+
+    // try {
+    babies.updateBaby(name, height_six_month, height_seven_month, height_eight_month, height_nine_month, height_ten_month, babyid, function (err, result) {
+
         if (!err) {
             var output = {
                 "babyid": result.insertId
@@ -199,15 +261,38 @@ app.put('/baby/:id', printDebugInfo, function (req, res) {
 
 
             res.status(201).send(result);
+
         }
-        // else shows internal error
         else {
-            output = {
-                "Error": "Internal sever issues"
-            };
-            res.status(500).send(output);
+            if (err.code == "ER_TRUNCATED_WRONG_VALUE_FOR_FIELD") {
+                res.status(406).send("Inappropriate value")
+
+            }
+
+            else if (err.code == "ER_BAD_NULL_ERROR") {
+                res.status(400).send("Null value not allowed")
+
+            }
+            else {
+                res.status(500).send("Internal Server Error")
+
+            }
+
         }
+
+
+
     });
+
+    // }
+    // catch (err) {
+    //     output = {
+    //         "Error": "Internal sever issues"
+    //     };
+    //     res.status(500).send(output);
+
+    // }
+
 
 });
 
@@ -217,7 +302,7 @@ app.put('/baby/:id', printDebugInfo, function (req, res) {
 
 
 // assignment 2 LOGIN
-app.post('/login',printDebugInfo, function (req, res) {
+app.post('/login', printDebugInfo, function (req, res) {
 
     var email = req.body.email;
     var password = req.body.password;

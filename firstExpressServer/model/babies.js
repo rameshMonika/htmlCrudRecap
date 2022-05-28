@@ -18,7 +18,7 @@ var BabiesDB = {
         var conn = db.getConnection();
 
         conn.connect(function (err) {
-            try {
+          
                 console.log("Connected!");
 
                 var sql = 'SELECT * FROM babies_record.baby; ;';
@@ -34,12 +34,6 @@ var BabiesDB = {
                     }
                 });
 
-            }
-            catch (err) {
-                console.log(err);
-                return callback(err.null);
-
-            }
 
 
         });
@@ -57,7 +51,7 @@ var BabiesDB = {
         conn.connect(function (err) {
 
 
-            try {
+          
                 console.log("Connected!");
 
                 var sql =
@@ -68,27 +62,18 @@ var BabiesDB = {
                     conn.end();
                     if (err) {
                         console.log(err);
-                        return callback(err.null);
+                        return callback(err);
                     } else {
 
-                        if (result[0] == undefined) {
-                            err = "undefined"
-                            return callback(null, err);
-                        }
-                        else {
+                      
                             console.log(result)
                             return callback(null, result);
-                        }
+                     
 
                     }
                 });
 
-            }
-            catch (err) {
-                console.log(err);
-                return callback(err.null);
-
-            }
+           
 
         });
     },
@@ -102,7 +87,6 @@ var BabiesDB = {
         conn.connect(function (err) {
 
 
-            try {
                 console.log("Connected!");
 
                 var sql = `
@@ -118,8 +102,8 @@ var BabiesDB = {
                     conn.end();
 
 
-                    if (result.affectedRows == 0) {
-                        err = "not found"
+                    if (err) {
+                        
                         return callback(null, err);
 
                     }
@@ -133,12 +117,7 @@ var BabiesDB = {
 
                 });
 
-            }
-            catch (err) {
-                console.log(err);
-                return callback(err.null);
-
-            }
+           
 
         });
     },
@@ -174,13 +153,16 @@ var BabiesDB = {
     );
         `;
 
-                try {
+           
                     conn.query(sql, [name, height_six_month, height_seven_month, height_eight_month, height_nine_month, height_ten_month], function (err, result) {
 
 
                         if (err) {
-                            err = "Invalid Input "
-                            return callback(null, err);
+
+                            console.log("*********************************")
+                           console.log(err.code)
+                           console.log("*********************************")
+                            return callback(err);
 
                         }
                         else {
@@ -191,20 +173,10 @@ var BabiesDB = {
 
 
 
-                        // conn.end();
-                        // return callback(null, result);
+                     
                     });
 
-                }
-                catch (err) {
-                    console.log("~~~~~~~~~~~~~~~~~errorcode~~~~~~~~~~~~");
-                    console.log(err.code);
-
-
-                    console.log("~~~~~~~~~~~~~~~~~~~~~~~~~")
-                    return callback(null, err);
-
-                }
+                
 
             });
 
@@ -226,7 +198,7 @@ var BabiesDB = {
 
 
             console.log("Connected!");
-            try {
+            // try {
                 var sql = `
                 UPDATE 
                 baby
@@ -254,26 +226,16 @@ var BabiesDB = {
                         err = "Invalid Input"
                         return callback(null, err);
                     }
-                    else if (result.affectedRows == 0) {
-                        err = "not found"
-                        return callback(null, err);
-                    }
                     else {
 
-                        result = "hi :" + result
+                     
 
                         return callback(null, result);
                     }
                     conn.end();
                 });
 
-            }
-            catch (err) {
-                err = "other error"
-                console.log(err);
-                return callback(null, err);
-
-            }
+         
 
 
 
