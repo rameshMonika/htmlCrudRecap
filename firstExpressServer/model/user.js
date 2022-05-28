@@ -4,7 +4,7 @@ console.log("---------------------------------------------------------");
 
 
 
-var db = require('./databaseConfig');
+var db = require('../controller/databaseConfig');
 var config =require('../config');
 var jwt=require('jsonwebtoken');
 

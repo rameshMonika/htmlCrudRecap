@@ -1,30 +1,31 @@
 console.log("---------------------------------------------------------");
 console.log("Assignment2> controller >databaseConfig.js");
 console.log("---------------------------------------------------------");
+const {databaseUserName, databaseHost, database, databasePassword} = require('../dbConfig')
+
 
 // ---------------------------------------
 // imports
 // ---------------------------------------
-var mysql = require('mysql');
+
 
 // ---------------------------------------
 // object / functions
 // ---------------------------------------
+const mysql =require("mysql");
 
-var dbconnect = {
-    getConnection: function () {
-        var conn = mysql.createConnection({
-            host: "localhost",
-            user: "root",
-            password: "akinom1811",
-            database: "babies_record"
-        });    
-
-        return conn;
+const config=(
+    {
+        user :databaseUserName,
+        password:databasePassword,
+        host:databaseHost,
+        database:database
     }
-};
+ );
+
+ var pool= new mysql.createPool(config)
 
 // ---------------------------------------
 // exports
 // ---------------------------------------
-module.exports = dbconnect;
+module.exports = pool;

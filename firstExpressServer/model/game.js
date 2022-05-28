@@ -4,7 +4,7 @@ console.log("---------------------------------------------------------");
 
 
 
-var db = require('./databaseConfig');
+var db = require('../controller/databaseConfig');
 
 // ----------------------------------------------------------------------------
 // Objects/functions
