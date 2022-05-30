@@ -298,6 +298,42 @@ app.put('/baby/:id', printDebugInfo, function (req, res) {
 
 
 
+app.get('/babiesPage/:pageNumber', printDebugInfo, async (req, res) => {
+    var pageNumber = req.params.pageNumber;
+
+    // try {
+        babies.PageBaby(pageNumber, function (err, result) {
+
+            if(!err){
+                
+                    res.status(200).send(result);
+    
+             
+
+            }
+            else{
+                    output = {
+            "Error": "Internal sever issues"
+        };
+        res.status(500).send(output);
+
+            }
+
+        
+
+
+
+        });
+
+   
+
+
+
+});
+
+
+
+
 
 
 

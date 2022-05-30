@@ -20,12 +20,12 @@ var BabiesDB = {
         pool.query(sql, (err, result) => {
             if (err) {
                 console.log(err);
-                       return callback(err.null);
+                return callback(err.null);
             } else {
                 return callback(null, result);
             }
-             // pool.end()
-            })
+            // pool.end()
+        })
 
 
 
@@ -35,16 +35,16 @@ var BabiesDB = {
 
     getBaby: function (id, callback) {
 
-        var sql="SELECT * FROM babies_record.baby where id =?;"
+        var sql = "SELECT * FROM babies_record.baby where id =?;"
 
         const values = [id]
 
-        pool.query(sql,values,(err, result) => {
-            if(err) {
+        pool.query(sql, values, (err, result) => {
+            if (err) {
                 console.log(err);
                 return callback(err);
             } else {
-                return callback(null,result);
+                return callback(null, result);
             }
         })
 
@@ -57,16 +57,16 @@ var BabiesDB = {
 
 
 
-var sql="DELETE FROM babies_record.baby where id =?;"
+        var sql = "DELETE FROM babies_record.baby where id =?;"
 
         const values = [id]
 
-        pool.query(sql,values,(err, result) => {
-            if(err) {
+        pool.query(sql, values, (err, result) => {
+            if (err) {
                 console.log(err);
                 return callback(err);
             } else {
-                return callback(null,result);
+                return callback(null, result);
             }
         })
 
@@ -78,8 +78,8 @@ var sql="DELETE FROM babies_record.baby where id =?;"
     addBaby: function (name, height_six_month, height_seven_month, height_eight_month, height_nine_month, height_ten_month, callback) {
 
 
-   
-                var sql = `INSERT INTO
+
+        var sql = `INSERT INTO
                 babies_record.baby (
            name,
            height_six_month,
@@ -98,16 +98,16 @@ var sql="DELETE FROM babies_record.baby where id =?;"
     );
         `;
 
-       
-        pool.query(sql,[name, height_six_month, height_seven_month, height_eight_month, height_nine_month, height_ten_month], (err, result) => {
+
+        pool.query(sql, [name, height_six_month, height_seven_month, height_eight_month, height_nine_month, height_ten_month], (err, result) => {
             if (err) {
                 console.log(err);
                 return callback(err.null);
             } else {
                 return callback(null, result);
             }
-             // pool.end()
-            })
+            // pool.end()
+        })
 
 
 
@@ -140,10 +140,10 @@ var sql="DELETE FROM babies_record.baby where id =?;"
         //     where
         //          id=?
         //          ;
-                
+
 
         //         `;
-            
+
 
         //         conn.query(sql, [name, height_six_month, height_seven_month, height_eight_month, height_nine_month, height_ten_month, id], function (err, result) {
 
@@ -156,7 +156,7 @@ var sql="DELETE FROM babies_record.baby where id =?;"
         //             }
         //             else {
 
-                     
+
 
         //                 return callback(null, result);
         //             }
@@ -164,7 +164,7 @@ var sql="DELETE FROM babies_record.baby where id =?;"
         //         });
 
 
-                var sql = `
+        var sql = `
                 UPDATE 
                 babies_record.baby
              SET
@@ -180,30 +180,54 @@ var sql="DELETE FROM babies_record.baby where id =?;"
                 
 
                 `;
-       
-       pool.query(sql,[name, height_six_month, height_seven_month, height_eight_month, height_nine_month, height_ten_month,id],(err, result) => {
-           if(err) {
-               console.log(err);
-               return callback(err);
-           } else {
-               return callback(null,result);
-           }
-       })
 
-         
+        pool.query(sql, [name, height_six_month, height_seven_month, height_eight_month, height_nine_month, height_ten_month, id], (err, result) => {
+            if (err) {
+                console.log(err);
+                return callback(err);
+            } else {
+                return callback(null, result);
+            }
+        })
 
 
 
 
-         }
-        
-        
-      
-    }
+
+
+    },
+
+    PageBaby: function (pageNumber, callback) {
+
+        pageNumber = parseInt(pageNumber)
+        limitPerPage = 3
+        numberOfValueToSkip = (pageNumber - 1) * 3
+
+        var sql = "SELECT * FROM babies_record.baby LIMIT ? OFFSET ?;"
+
+        const values = [limitPerPage, numberOfValueToSkip]
+
+        pool.query(sql, values, (err, result) => {
+            if (err) {
+                console.log(err);
+                return callback(err);
+            } else {
+                return callback(null, result);
+            }
+        })
+
+
+    },
 
 
 
-;
+
+
+}
+
+
+
+    ;
 
 // ----------------------------------------------------------------------------
 // exports
